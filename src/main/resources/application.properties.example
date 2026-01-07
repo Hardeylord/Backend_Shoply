@@ -1,0 +1,23 @@
+spring.application.name=Products
+spring.data.mongodb.uri=mongodb+srv://<db_username>:<password>@cluster0.nviquj4.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+spring.data.mongodb.database=<db_name>
+
+# allow bigger uploads
+spring.servlet.multipart.max-file-size=10MB
+spring.servlet.multipart.max-request-size=10MB
+
+
+jwt.secret=JWT_SECRET_KEY
+
+spring.jpa.hibernate.ddl-auto=update
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=sendermail@gmail.com
+spring.mail.password=##########
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
+
+spring.cache.type=redis
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+spring.cache.cache-names=products
