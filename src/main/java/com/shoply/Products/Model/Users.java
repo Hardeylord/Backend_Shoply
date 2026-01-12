@@ -24,6 +24,7 @@ public class Users implements UserDetails {
     private String password;
     private String email;
     private boolean enabled;
+    private Status status;
     private ROLE role;
     private String cartId;
 
@@ -31,12 +32,13 @@ public class Users implements UserDetails {
 
     }
 
-    public Users(String id, String username, String password,String email,boolean enabled, ROLE role, String cartId) {
+    public Users(String id, String username, String password,String email,boolean enabled,Status status, ROLE role, String cartId) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.enabled = enabled;
+        this.status= status;
         this.role = role;
         this.cartId = cartId;
     }
@@ -118,6 +120,14 @@ public class Users implements UserDetails {
         this.role = role;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     public String getCart() {
         return cartId;
     }
@@ -134,8 +144,9 @@ public class Users implements UserDetails {
                 ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", enabled=" + enabled +
+                ", status=" + status +
                 ", role=" + role +
-                ", cart=" + cartId +
+                ", cartId='" + cartId + '\'' +
                 '}';
     }
 }

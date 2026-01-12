@@ -1,5 +1,6 @@
 package com.shoply.Products.services;
 
+import com.shoply.Products.Model.Status;
 import com.shoply.Products.Model.Token;
 import com.shoply.Products.Model.Users;
 import com.shoply.Products.repository.TokenRepository;
@@ -39,6 +40,7 @@ public class UserService {
         } else {
             user.setRole(ROLE.USER);
             user.setEnabled(true);
+            user.setStatus(Status.ONLINE);
             user.setPassword(encoder.encode(user.getPassword()));
             return ResponseEntity.ok(userRepository.save(user));
         }
