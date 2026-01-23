@@ -1,11 +1,16 @@
 package com.shoply.Products.services;
 
+import com.shoply.Products.Model.RefreshToken;
 import com.shoply.Products.Model.Status;
 import com.shoply.Products.Model.Token;
 import com.shoply.Products.Model.Users;
+import com.shoply.Products.Response.JWTResponse;
+import com.shoply.Products.repository.RefreshTokenRepository;
 import com.shoply.Products.repository.TokenRepository;
 import com.shoply.Products.repository.UserRepository;
 import com.shoply.Products.rolePermission.ROLE;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,8 +36,10 @@ public class UserService {
     UserRepository userRepository;
     @Autowired
     AuthenticationManager authenticationManager;
-
-
+    @Autowired
+    RefreshTokenService refreshTokenService;
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
 
     public ResponseEntity<?> signup(Users user) {
         Optional<Users> existingUser = userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername());
@@ -48,12 +56,14 @@ public class UserService {
     @Autowired
     JWTService jwtService;
 
-    public String verifyUser(Users user) {
+    public JWTResponse verifyUser(Users user) {
         Authentication am = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword() ));
         if (am.isAuthenticated()){
             Users userClaim=userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername()).orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
-
-            return jwtService.generateJWTToken(userClaim.getUsername(), userClaim.getRole().name());
+            System.out.println(userClaim.getRole().name());
+            RefreshToken refreshToken=refreshTokenService.createRefreshToken(userClaim);
+            return new JWTResponse(jwtService.generateJWTToken(userClaim.getUsername(), userClaim.getRole().name()), refreshToken.getToken());
+//            return jwtService.generateJWTToken(userClaim.getUsername(), userClaim.getRole().name());
         }
         throw new RuntimeException("USER NOT FOUND");
     }
@@ -69,5 +79,14 @@ public class UserService {
             users.setPassword(encoder.encode(users.getPassword()));
             return ResponseEntity.ok(userRepository.save(users));
         }
+    }
+
+    public void logoutUser(HttpServletRequest httpServletRequest) {
+//        System.out.println("logged out...");
+        Arrays.stream(httpServletRequest.getCookies())
+                .filter(cookie -> cookie.getName().equals("refreshToken"))
+                .findFirst()
+                .map(Cookie::getValue).ifPresent(refreshToken -> refreshTokenRepository.deleteByToken(refreshToken));
+
     }
 }

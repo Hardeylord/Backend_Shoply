@@ -15,11 +15,6 @@ public class UserServices {
     @Autowired
     UserRepository userRepository;
     public List<Users> findByStatus() {
-
-//        List<Users> online = userRepository.findAllByStatus(Status.ONLINE);
-//        for (int i = 0; i < online.size(); i++) {
-//            System.out.println(online.get(i));
-//        }
         return userRepository.findAllByStatus(Status.ONLINE);
     }
 
@@ -27,8 +22,20 @@ public class UserServices {
 //        Updating User's status to ONLINE when they connect
         Optional<Users> users1=userRepository.findByUsername(users.getUsername());
         if (users1.isPresent()) {
-            users.setStatus(Status.ONLINE);
-            userRepository.save(users);
+            Users offlineUser = users1.get();
+            offlineUser.setStatus(Status.ONLINE);
+            userRepository.save(offlineUser);
+        }
+
+        return users;
+    }
+
+    public Users logoutUser(Users users) {
+        Optional<Users> users1=userRepository.findByUsername(users.getUsername());
+        if (users1.isPresent()) {
+            Users usDb = users1.get();
+            usDb.setStatus(Status.OFFLINE);
+            userRepository.save(usDb);
         }
 
         return users;

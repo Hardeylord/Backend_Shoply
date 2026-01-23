@@ -24,6 +24,12 @@ public class UserController2 {
         return userServices.saveUser(users);
     }
 
+    @MessageMapping("/user.disconnectUser")
+    @SendTo("/topic/public")
+    public Users disconnectUser(@Payload Users users){
+        return userServices.logoutUser(users);
+    }
+
     @GetMapping("/connectedUsers")
     public List<Users> connectedUsers(){
 

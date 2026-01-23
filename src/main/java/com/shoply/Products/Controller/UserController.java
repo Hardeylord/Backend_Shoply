@@ -1,14 +1,26 @@
 package com.shoply.Products.Controller;
 
+import com.shoply.Products.Model.RefreshToken;
 import com.shoply.Products.Model.Users;
+import com.shoply.Products.Response.JWTResponse;
+import com.shoply.Products.services.JWTService;
+import com.shoply.Products.services.RefreshTokenService;
 import com.shoply.Products.services.TokenService;
 import com.shoply.Products.services.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -17,6 +29,10 @@ public class UserController {
     UserService userService;
     @Autowired
     TokenService tokenService;
+    @Autowired
+    RefreshTokenService refreshTokenService;
+    @Autowired
+    JWTService jwtService;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody Users user){
@@ -27,14 +43,56 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Users user){
+        JWTResponse tokens = userService.verifyUser(user);
+//        System.out.println(tokens.getRefreshToken());
+        ResponseCookie responseCookie = ResponseCookie.from("refreshToken", tokens.getRefreshToken())
+                .httpOnly(true)
+                .secure(false)
+                .sameSite("Lax")
+                .path("/")
+                .maxAge(Duration.ofDays(7))
+                .build();
 
         try{
-            return ResponseEntity.ok(userService.verifyUser(user));
+            return ResponseEntity.ok().
+                    header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(tokens.getAccessToken());
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
                     .body(e.getMessage()+ " USER NOT FOUND");
         }
+    }
+
+    @PostMapping("/refreshToken")
+    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest){
+        String refreshToken= Arrays.stream(httpServletRequest.getCookies())
+                .filter(cookie -> cookie.getName().equals("refreshToken"))
+                .findFirst()
+                .map(Cookie::getValue)
+                .orElseThrow(()-> new RuntimeException("NO REFRESH TOKEN FOUND"));
+//        System.out.println("rToken is: ..."+refreshToken);
+        RefreshToken tokenExist = refreshTokenService.isTokenExist(refreshToken).orElse(null);
+        if (tokenExist == null){
+            ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
+                    .httpOnly(true)
+                    .secure(false)
+                    .sameSite("Lax")
+                    .path("/")
+                    .maxAge(0)
+                    .build();
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                    .build();
+        }
+        RefreshToken tokenExpired = refreshTokenService.isTokenExpired(tokenExist);
+        return ResponseEntity.ok(jwtService.generateJWTToken(tokenExpired.getUser().getUsername(),tokenExpired.getUser().getRole().name()));
+    }
+
+    @PostMapping("/auth/logout")
+    public void logoutUser(HttpServletRequest httpServletRequest){
+        userService.logoutUser(httpServletRequest);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -45,7 +103,6 @@ public class UserController {
 
     @PostMapping("/accountUpgrade")
     public void accountUpgrade(@RequestBody Users users){
-        System.out.println("i got here"+users.getEmail());
         tokenService.accountUpgrade(users);
     }
 

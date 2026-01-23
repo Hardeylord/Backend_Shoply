@@ -46,7 +46,6 @@ public class JWTService {
 
     private Key genKey() {
         byte[] keyByte = Decoders.BASE64URL.decode(signature);
-//        System.out.println(signature+ " <- This is the signature");
         return Keys.hmacShaKeyFor(keyByte);
     }
 

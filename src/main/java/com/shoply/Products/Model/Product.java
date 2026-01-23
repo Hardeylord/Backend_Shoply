@@ -19,18 +19,20 @@ public class Product implements Serializable {
     private String desc;
     private Double price;
     private Double rating;
+    private boolean negotiable;
     private List image;
 
     public Product() {
     }
 
-    public Product(String id, int prodId, String name, String desc, Double price, Double rating, List image) {
+    public Product(String id, int prodId, String name, String desc, Double price, Double rating,boolean negotiable, List image) {
         this.id = id;
         this.prodId = prodId;
         this.name = name;
         this.desc = desc;
         this.price = price;
         this.rating = rating;
+        this.negotiable=negotiable;
         this.image = image;
     }
 
@@ -82,6 +84,14 @@ public class Product implements Serializable {
         this.rating = rating;
     }
 
+    public boolean isNegotiable() {
+        return negotiable;
+    }
+
+    public void setNegotiable(boolean negotiable) {
+        this.negotiable = negotiable;
+    }
+
     public List getImage() {
         return image;
     }
@@ -99,6 +109,7 @@ public class Product implements Serializable {
                 ", desc='" + desc + '\'' +
                 ", price=" + price +
                 ", rating=" + rating +
+                ", negotiable=" + negotiable +
                 ", image=" + image +
                 '}';
     }

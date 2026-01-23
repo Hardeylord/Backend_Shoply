@@ -14,7 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -59,7 +58,7 @@ public class ProductServices {
 //    adding products
 
     @CacheEvict(value = "products", allEntries = true)
-    public void addProd(String id, int prodId, String name, String desc, Double price, Double rating, List<MultipartFile> image) throws IOException {
+    public void addProd(String id, int prodId, String name, String desc, Double price, Double rating, boolean negotiable, List<MultipartFile> image) throws IOException {
         List <Map<String, String>> imageUrls = new java.util.ArrayList<>();
 
         for(MultipartFile images: image){
@@ -81,12 +80,14 @@ public class ProductServices {
         prod.setDesc(desc);
         prod.setPrice(price);
         prod.setRating(rating);
+        prod.setNegotiable(negotiable);
         prod.setImage(imageUrls);
 
         pRepo.save(prod);
     }
 
 //    deleting products
+@CacheEvict(value = "products", allEntries = true)
     public void delProduct(String name, List<String> imageId) throws IOException {
         pRepo.deleteByName(name);
         for (String ids : imageId) {
@@ -104,6 +105,7 @@ public class ProductServices {
     }
 
 //    updating products
+    @CacheEvict(value = "products", allEntries = true)
     public ResponseEntity<?> updateProd(String id, String name, String desc, Double price, Double rating,List<String> imageId, List<MultipartFile> image) throws IOException {
 
         Optional<Product> mine= pRepo.findById(id);
@@ -138,10 +140,10 @@ public class ProductServices {
             }
             change.setImage(currentImages);
             pRepo.save(change);
-            System.out.println("Updated!!!");
+//            System.out.println("Updated!!!");
             return new ResponseEntity<>(change, HttpStatus.OK);
         } else {
-            System.out.println("Product not found.");
+//            System.out.println("Product not found.");
             return new ResponseEntity<>(new ProductNotFoundError(""), HttpStatus.NOT_FOUND);
         }
     }

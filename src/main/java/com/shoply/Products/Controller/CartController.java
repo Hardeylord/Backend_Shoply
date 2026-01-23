@@ -32,7 +32,6 @@ public class CartController {
     @GetMapping("/cartItems")
     public ResponseEntity<?> getUserCart() {
         String userInfo = SecurityContextHolder.getContext().getAuthentication().getName();
-        System.out.println(userInfo);
         Users user = userRepository.findByUsernameOrEmail(userInfo, userInfo).orElseThrow(()-> new UsernameNotFoundException("USER NOT FOUND!!!"));
         String id =user.getId();
         return ResponseEntity.ok(cartRepository.findByUserId(id)

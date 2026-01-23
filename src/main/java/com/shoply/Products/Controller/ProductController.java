@@ -54,8 +54,9 @@ public class ProductController {
                            @RequestParam("desc") String desc,
                            @RequestParam("price") Double price,
                            @RequestParam("rating") Double rating,
+                           @RequestParam("negotiable") boolean negotiable,
                            @RequestParam("image") List<MultipartFile> image ) throws IOException {
-        services.addProd(id, prodId, name, desc, price, rating, image);
+        services.addProd(id, prodId, name, desc, price, rating,negotiable, image);
     }
 
     @GetMapping("/latestproducts")
@@ -84,7 +85,7 @@ public class ProductController {
                               @RequestParam("rating") Double rating,
                               @RequestParam(value = "imageId", required = false) List<String> imageId,
                               @RequestParam(value = "image", required = false) List<MultipartFile> image ) throws IOException {
-        System.out.println("called");
+
         return services.updateProd(id, name, desc, price, rating, imageId, image);
     }
 
