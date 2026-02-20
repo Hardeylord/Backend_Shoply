@@ -24,6 +24,7 @@ public class UserServices {
         if (users1.isPresent()) {
             Users offlineUser = users1.get();
             offlineUser.setStatus(Status.ONLINE);
+            System.out.println("User " + offlineUser.getUsername() + " is now ONLINE");
             userRepository.save(offlineUser);
         }
 

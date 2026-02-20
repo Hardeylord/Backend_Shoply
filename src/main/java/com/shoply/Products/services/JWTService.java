@@ -22,7 +22,7 @@ public class JWTService {
 
     @Value("${jwt.secret}")
     private String signature;
-    private final long EXPIRATION_DATE=1000*60*60;
+    private final long EXPIRATION_DATE=1000*60*15;
 
 //    public JWTService() throws NoSuchAlgorithmException {
 //        KeyGenerator keyGenerator= KeyGenerator.getInstance("HmacSHA256");

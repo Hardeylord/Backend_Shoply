@@ -59,29 +59,6 @@ public class CartService {
         }
 
         return cartRepository.save(cart);
-
-
-//        Product product = productRepository.findById(cartDto.getProdId()).orElseThrow(()-> new ProductNotFoundError("PRODUCT NOT FOUND"));
-//        checks if user already has a cart
-//        Cart cart = cartRepository.findByUser(user).orElseGet(()-> {
-//            Cart newCart = new Cart();
-//            newCart.setUser(user);
-//            return cartRepository.save(newCart);
-//        });
-//
-//        Optional<CartItems> existingItem = cartItemRepository.findByCartAndProduct(cart, product);
-//
-//        if (existingItem.isPresent()){
-//            return null;
-//        } else {
-//            CartItems addToCart = new CartItems();
-//            addToCart.setCart(cart);
-//            addToCart.setProduct(product);
-//
-//          return cartItemRepository.save(addToCart);
-//        }
-
-
         }
 
     public Cart deleteItem(String id) {

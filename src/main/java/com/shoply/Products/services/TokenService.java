@@ -24,7 +24,6 @@ public class TokenService {
 //        check if user exist
         Users userData = userRepository.findByUsernameOrEmail(users.getEmail(), users.getEmail()).orElseThrow(()-> new IllegalStateException("INVALID CREDENTIALS1"));
         System.out.println(userData.getEmail());
-//        Users user=userRepository.findByEmail(userData.getEmail()).orElseThrow(()-> new IllegalStateException("INVALID CREDENTIALS"));
 //        generate upgrade token
         Token upgradeToken= new Token(
                 UUID.randomUUID().toString(),

@@ -1,8 +1,6 @@
 package com.shoply.Products.Controller;
 
-import com.shoply.Products.Model.Cart;
 import com.shoply.Products.Model.CartDto;
-import com.shoply.Products.Model.CartItems;
 import com.shoply.Products.Model.Users;
 import com.shoply.Products.repository.CartRepository;
 import com.shoply.Products.repository.UserRepository;
@@ -13,8 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 public class CartController {

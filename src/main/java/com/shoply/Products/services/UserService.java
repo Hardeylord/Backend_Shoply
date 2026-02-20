@@ -61,6 +61,8 @@ public class UserService {
         if (am.isAuthenticated()){
             Users userClaim=userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername()).orElseThrow(()-> new UsernameNotFoundException("User Not Found"));
             System.out.println(userClaim.getRole().name());
+            userClaim.setStatus(Status.ONLINE);
+            userRepository.save(userClaim);
             RefreshToken refreshToken=refreshTokenService.createRefreshToken(userClaim);
             return new JWTResponse(jwtService.generateJWTToken(userClaim.getUsername(), userClaim.getRole().name()), refreshToken.getToken());
 //            return jwtService.generateJWTToken(userClaim.getUsername(), userClaim.getRole().name());
