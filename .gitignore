@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### spring boot config ###
-src/main/resources/application.properties
+#src/main/resources/application.properties
 
 ### Cloudinary Config ###
-src/main/java/com/shoply/products/config/ConfigCloudinary.java
+#src/main/java/com/shoply/products/config/ConfigCloudinary.java
