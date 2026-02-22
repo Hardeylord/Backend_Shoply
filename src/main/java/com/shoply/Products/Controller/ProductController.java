@@ -37,6 +37,12 @@ public class ProductController {
         return ResponseEntity.ok(services.fetchProd(pageable));
     }
 
+    @GetMapping("/products/checkList")
+    public ResponseEntity<List<Product>> allProd(){
+
+        return ResponseEntity.ok(services.allProd());
+    }
+
 //    @GetMapping("/sortedproducts")
 //    public ResponseEntity<List<Product>> fetchProductsSorted(@RequestParam String field){
 //
