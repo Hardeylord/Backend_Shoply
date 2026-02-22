@@ -25,6 +25,11 @@ public class ProductController {
     @Autowired
     ProductServices services;
 
+    @GetMapping("/")
+    public String testEndpoint(){
+        return "Shoply up and running";
+    }
+
     @GetMapping("/products")
     public ResponseEntity<Page<Product>> fetchProducts(@RequestParam(defaultValue = "1") int pageNo,
                                                        @RequestParam(defaultValue = "10") int pageSize){
