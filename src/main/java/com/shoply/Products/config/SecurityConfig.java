@@ -34,7 +34,21 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors->{})
                 .authorizeHttpRequests(request-> request
-                        .requestMatchers("/cancel","/webhook/stripe","/sucsess","/ws/**","/signup","/refreshToken","/auth/logout","/products", "/login", "/", "/search/**", "/product/**","/accountUpgrade", "/validateToken", "/latestproducts")
+                        .requestMatchers("/cancel",
+                                "/webhook/stripe",
+                                "/sucsess",
+                                "/ws/**",
+                                "/signup",
+                                "/refreshToken",
+                                "/auth/logout",
+                                "/products/**",
+                                "/login",
+                                "/",
+                                "/search/**",
+                                "/product/**",
+                                "/accountUpgrade",
+                                "/validateToken",
+                                "/latestproducts")
                         .permitAll()
                         .anyRequest().authenticated())
                 .httpBasic(AbstractHttpConfigurer::disable)
