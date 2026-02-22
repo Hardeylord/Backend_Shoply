@@ -25,7 +25,7 @@ public class ProductController {
     @Autowired
     ProductServices services;
 
-    @GetMapping("/")
+    @GetMapping("/products")
     public ResponseEntity<Page<Product>> fetchProducts(@RequestParam(defaultValue = "1") int pageNo,
                                                        @RequestParam(defaultValue = "10") int pageSize){
         Pageable pageable = PageRequest.of(pageNo-1, pageSize);
