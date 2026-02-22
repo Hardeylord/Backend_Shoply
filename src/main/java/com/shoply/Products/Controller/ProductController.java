@@ -30,7 +30,7 @@ public class ProductController {
         return "Shoply up and running";
     }
 
-    @GetMapping("/products")
+    @GetMapping("/products/productList")
     public ResponseEntity<Page<Product>> fetchProducts(@RequestParam(defaultValue = "1") int pageNo,
                                                        @RequestParam(defaultValue = "10") int pageSize){
         Pageable pageable = PageRequest.of(pageNo-1, pageSize);
