@@ -43,11 +43,6 @@ public class ProductServices {
         return pRepo.findAll(pageable);
     }
 
-    public List<Product> allProd( ) {
-        System.out.println("FETCH FROM DB");
-        return pRepo.findAll();
-    }
-
     @Cacheable(value = "products", key = "'page=' + #pageNo + ',size=' + #pageSize + ',filter' + #field")
     public Page<Product> fetchProdSorted (int pageNo, int pageSize, String field) {
         List<String> sortBys= List.of("name", "price", "rating");
