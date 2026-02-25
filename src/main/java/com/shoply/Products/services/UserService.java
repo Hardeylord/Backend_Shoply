@@ -2,11 +2,9 @@ package com.shoply.Products.services;
 
 import com.shoply.Products.Model.RefreshToken;
 import com.shoply.Products.Model.Status;
-import com.shoply.Products.Model.Token;
 import com.shoply.Products.Model.Users;
 import com.shoply.Products.Response.JWTResponse;
 import com.shoply.Products.repository.RefreshTokenRepository;
-import com.shoply.Products.repository.TokenRepository;
 import com.shoply.Products.repository.UserRepository;
 import com.shoply.Products.rolePermission.ROLE;
 import jakarta.servlet.http.Cookie;
@@ -21,10 +19,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class UserService {
