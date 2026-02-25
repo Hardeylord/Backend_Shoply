@@ -67,9 +67,11 @@ public class UserController {
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest){
         Cookie[] cookies = httpServletRequest.getCookies();
+
         for (Cookie jwtcookie: cookies){
             System.out.println("cookies from cookies-> "+jwtcookie);
         }
+
         String refreshToken= Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
                 .findFirst()
