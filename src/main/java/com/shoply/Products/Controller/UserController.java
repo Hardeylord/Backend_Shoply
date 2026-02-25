@@ -47,8 +47,8 @@ public class UserController {
 //        System.out.println(tokens.getRefreshToken());
         ResponseCookie responseCookie = ResponseCookie.from("refreshToken", tokens.getRefreshToken())
                 .httpOnly(true)
-                .secure(false)
-                .sameSite("Lax")
+                .secure(true)
+                .sameSite("None")
                 .path("/")
                 .maxAge(Duration.ofDays(7))
                 .build();
@@ -66,12 +66,6 @@ public class UserController {
 
     @PostMapping("/refreshToken")
     public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest){
-        Cookie[] cookies = httpServletRequest.getCookies();
-
-        for (Cookie jwtcookie: cookies){
-            System.out.println("cookies from cookies-> "+jwtcookie);
-        }
-
         String refreshToken= Arrays.stream(httpServletRequest.getCookies())
                 .filter(cookie -> cookie.getName().equals("refreshToken"))
                 .findFirst()
@@ -82,8 +76,8 @@ public class UserController {
         if (tokenExist == null){
             ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
                     .httpOnly(true)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .secure(true)
+                    .sameSite("None")
                     .path("/")
                     .maxAge(0)
                     .build();

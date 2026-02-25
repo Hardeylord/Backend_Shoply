@@ -32,8 +32,8 @@ public class RefreshTokenService {
             refreshTokenRepository.delete(refreshToken);
             ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
                     .httpOnly(true)
-                    .secure(false)
-                    .sameSite("Lax")
+                    .secure(true)
+                    .sameSite("None")
                     .path("/")
                     .maxAge(0)
                     .build();
