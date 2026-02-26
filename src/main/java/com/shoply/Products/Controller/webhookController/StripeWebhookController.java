@@ -80,7 +80,8 @@ public class StripeWebhookController {
             Users userId = checkoutSession.getUserId();
 
             Orders productOrder = new Orders();
-            productOrder.setOrderStatus(ORDER_STATUS.PAID);
+            productOrder.setOrderStatus(ORDER_STATUS.PROCESSING);
+            productOrder.setPaymentStatus(CHECKOUT_STATUS.SUCCESS);
             productOrder.setItems(checkoutSession.getItems());
             productOrder.setPrice(checkoutSession.getSub_total());
             productOrder.setOwner(checkoutSession.getUserId());

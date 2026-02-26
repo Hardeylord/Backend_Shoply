@@ -1,6 +1,7 @@
 package com.shoply.Products.Model;
 
 
+import com.shoply.Products.rolePermission.CHECKOUT_STATUS;
 import com.shoply.Products.rolePermission.ORDER_STATUS;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -21,6 +22,7 @@ public class Orders {
     private String deliveryAddress;
     private String email;
     private ORDER_STATUS orderStatus;
+    private CHECKOUT_STATUS paymentStatus;
     private List<CartItems> items;
     private double price;
 
@@ -28,7 +30,7 @@ public class Orders {
 
     }
 
-    public Orders(Users owner, String firstName, String lastName, String phonenumber, String deliveryAddress, String email, ORDER_STATUS orderStatus, List<CartItems> items, double price) {
+    public Orders(Users owner, String firstName, String lastName, String phonenumber, String deliveryAddress, String email, ORDER_STATUS orderStatus, CHECKOUT_STATUS paymentStatus, List<CartItems> items, double price) {
         this.owner = owner;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,6 +38,7 @@ public class Orders {
         this.deliveryAddress = deliveryAddress;
         this.email = email;
         this.orderStatus = orderStatus;
+        this.paymentStatus = paymentStatus;
         this.items = items;
         this.price = price;
     }
@@ -112,6 +115,14 @@ public class Orders {
         this.items = items;
     }
 
+    public CHECKOUT_STATUS getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(CHECKOUT_STATUS paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
     public double getPrice() {
         return price;
     }
@@ -131,6 +142,7 @@ public class Orders {
                 ", deliveryAddress='" + deliveryAddress + '\'' +
                 ", email='" + email + '\'' +
                 ", orderStatus=" + orderStatus +
+                ", paymentStatus=" + paymentStatus +
                 ", items=" + items +
                 ", price=" + price +
                 '}';
