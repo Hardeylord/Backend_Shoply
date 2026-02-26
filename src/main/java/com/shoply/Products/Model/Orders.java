@@ -15,6 +15,11 @@ public class Orders {
     private String id;
     @DBRef
     private Users owner;
+    private String firstName;
+    private String lastName;
+    private String phonenumber;
+    private String deliveryAddress;
+    private String email;
     private ORDER_STATUS orderStatus;
     private List<CartItems> items;
     private double price;
@@ -23,9 +28,13 @@ public class Orders {
 
     }
 
-    public Orders(String id, Users owner, ORDER_STATUS orderStatus, List<CartItems> items, double price) {
-        this.id = id;
+    public Orders(Users owner, String firstName, String lastName, String phonenumber, String deliveryAddress, String email, ORDER_STATUS orderStatus, List<CartItems> items, double price) {
         this.owner = owner;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phonenumber = phonenumber;
+        this.deliveryAddress = deliveryAddress;
+        this.email = email;
         this.orderStatus = orderStatus;
         this.items = items;
         this.price = price;
@@ -45,6 +54,46 @@ public class Orders {
 
     public void setOwner(Users owner) {
         this.owner = owner;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public ORDER_STATUS getOrderStatus() {
@@ -76,6 +125,11 @@ public class Orders {
         return "Orders{" +
                 "id='" + id + '\'' +
                 ", owner=" + owner +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", email='" + email + '\'' +
                 ", orderStatus=" + orderStatus +
                 ", items=" + items +
                 ", price=" + price +

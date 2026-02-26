@@ -13,5 +13,5 @@ import java.util.Optional;
 @Repository
 public interface CheckOutRepository extends MongoRepository<Checkout_session, String> {
 
-    Optional<Checkout_session> findByUserIdAndStatusAndExpiresAtAfter(Users userClaim, CHECKOUT_STATUS checkoutStatus, Instant now);
+    Optional<Checkout_session> findByIdempotencyKey(String idempotencyKey);
 }

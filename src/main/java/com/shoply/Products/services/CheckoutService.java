@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +32,7 @@ public class CheckoutService {
     @Autowired
     CheckOutRepository checkOutRepository;
 
-    public Checkout_session validateCartItems() {
+    public Checkout_session validateCartItems(Checkout_session userdetails, String idempotency_Key) {
 
         String user = SecurityContextHolder.getContext().getAuthentication().getName();
         Users userClaim = userRepository.findByUsernameOrEmail(user, user).orElseThrow(()-> new RuntimeException("USER NOT FOUND"));
@@ -44,7 +43,7 @@ public class CheckoutService {
             throw new RuntimeException("CART PRICE MISMATCH");
         }
 
-        Optional<Checkout_session> idempotent= checkOutRepository.findByUserIdAndStatusAndExpiresAtAfter(userClaim, CHECKOUT_STATUS.PENDING, Instant.now());
+        Optional<Checkout_session> idempotent= checkOutRepository.findByIdempotencyKey(idempotency_Key);
         if (idempotent.isPresent()) {
             return idempotent.get();
         }
@@ -55,7 +54,12 @@ public class CheckoutService {
             checkoutSession.setSub_total(sum);
             checkoutSession.setCurrency("usd");
             checkoutSession.setExpiresAt(Instant.now().plus(10, ChronoUnit.MINUTES));
-            checkoutSession.setCheckoutStatus(CHECKOUT_STATUS.PENDING);
+            checkoutSession.setStatus(CHECKOUT_STATUS.PENDING);
+            checkoutSession.setLastName(userdetails.getLastName());
+            checkoutSession.setFirstName(userdetails.getFirstName());
+            checkoutSession.setDeliveryAddress(userdetails.getDeliveryAddress());
+            checkoutSession.setPhonenumber(userdetails.getPhonenumber());
+            checkoutSession.setIdempotency_Key(idempotency_Key);
 
         checkOutRepository.save(checkoutSession);
 

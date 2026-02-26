@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "Checkout_session")
@@ -18,10 +17,14 @@ public class Checkout_session {
     private String id;
     @DBRef
     private Users userId;
+    private String firstName;
+    private String lastName;
+    private String phonenumber;
+    private String deliveryAddress;
     private List<CartItems> items;
     private double sub_total;
     private String currency;
-
+    private String idempotencyKey;
     @Indexed
     private Instant expiresAt;
     private CHECKOUT_STATUS status;
@@ -29,13 +32,19 @@ public class Checkout_session {
     public Checkout_session() {
 
     }
-    public Checkout_session(Users userId, List<CartItems> items, double sub_total, String currency, Instant expiresAt, CHECKOUT_STATUS status) {
-        this.userId = userId;
-        this.items = items;
-        this.sub_total = sub_total;
-        this.currency = currency;
-        this.expiresAt = expiresAt;
+
+    public Checkout_session(CHECKOUT_STATUS status, Instant expiresAt, String idempotencyKey, String currency, double sub_total, List<CartItems> items, String deliveryAddress, String phonenumber, String lastName, String firstName, Users userId) {
         this.status = status;
+        this.expiresAt = expiresAt;
+        this.idempotencyKey = idempotencyKey;
+        this.currency = currency;
+        this.sub_total = sub_total;
+        this.items = items;
+        this.deliveryAddress = deliveryAddress;
+        this.phonenumber = phonenumber;
+        this.lastName = lastName;
+        this.firstName = firstName;
+        this.userId = userId;
     }
 
     public String getId() {
@@ -86,11 +95,51 @@ public class Checkout_session {
         this.expiresAt = expiresAt;
     }
 
-    public CHECKOUT_STATUS getCheckoutStatus() {
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getIdempotency_Key() {
+        return idempotencyKey;
+    }
+
+    public void setIdempotency_Key(String idempotencyKey) {
+        this.idempotencyKey = idempotencyKey;
+    }
+
+    public CHECKOUT_STATUS getStatus() {
         return status;
     }
 
-    public void setCheckoutStatus(CHECKOUT_STATUS status) {
+    public void setStatus(CHECKOUT_STATUS status) {
         this.status = status;
     }
 
@@ -99,9 +148,14 @@ public class Checkout_session {
         return "Checkout_session{" +
                 "id='" + id + '\'' +
                 ", userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phonenumber='" + phonenumber + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
                 ", items=" + items +
                 ", sub_total=" + sub_total +
                 ", currency='" + currency + '\'' +
+                ", idempotencyKey='" + idempotencyKey + '\'' +
                 ", expiresAt=" + expiresAt +
                 ", status=" + status +
                 '}';

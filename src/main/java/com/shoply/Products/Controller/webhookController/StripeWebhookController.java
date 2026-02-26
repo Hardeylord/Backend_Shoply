@@ -73,21 +73,28 @@ public class StripeWebhookController {
             }
             Checkout_session checkoutSession = checkOutRepository.findById(checkoutSessionId).orElseThrow(()->new RuntimeException("CHECKOUT SESSION EXPIRED"));
 
-            if (checkoutSession.getCheckoutStatus() == CHECKOUT_STATUS.SUCCESS) {
+            if (checkoutSession.getStatus() == CHECKOUT_STATUS.SUCCESS) {
                 return ResponseEntity.ok("ALREADY PROCESSED");
             }
+
+            Users userId = checkoutSession.getUserId();
 
             Orders productOrder = new Orders();
             productOrder.setOrderStatus(ORDER_STATUS.PAID);
             productOrder.setItems(checkoutSession.getItems());
             productOrder.setPrice(checkoutSession.getSub_total());
             productOrder.setOwner(checkoutSession.getUserId());
+            productOrder.setEmail(userId.getEmail());
+            productOrder.setFirstName(checkoutSession.getFirstName());
+            productOrder.setLastName(checkoutSession.getLastName());
+            productOrder.setPhonenumber(checkoutSession.getPhonenumber());
+            productOrder.setDeliveryAddress(checkoutSession.getDeliveryAddress());
 
             orderRepository.save(productOrder);
 
-            checkoutSession.setCheckoutStatus(CHECKOUT_STATUS.SUCCESS);
+            checkoutSession.setStatus(CHECKOUT_STATUS.SUCCESS);
             checkOutRepository.save(checkoutSession);
-            Users userId = checkoutSession.getUserId();
+
 //            send order confirmation mail
             emailService.orderConfirmation(userId.getEmail(), checkoutSession.getSub_total(), checkoutSession.getItems(), checkoutSession.getId());
 

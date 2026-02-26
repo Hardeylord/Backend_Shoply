@@ -38,7 +38,7 @@ public class StripePaymentService {
 
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
-                .setSuccessUrl("http://localhost:8080/sucsess")
+                .setSuccessUrl("https://shoply-client-erp2.vercel.app/success")
                 .setCancelUrl("http://localhost:8080/cancel")
                 .putMetadata("checkoutSessionId", checkoutResponse.getId())
                 .addLineItem(lineItem)
