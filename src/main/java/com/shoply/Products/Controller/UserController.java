@@ -56,7 +56,7 @@ public class UserController {
         try{
             return ResponseEntity.ok().
                     header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .body(tokens.getAccessToken());
+                    .body(new JWTResponse(tokens.getAccessToken(), tokens.getRefreshToken()));
         } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.UNAUTHORIZED)
@@ -65,13 +65,30 @@ public class UserController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest){
-        String refreshToken= Arrays.stream(httpServletRequest.getCookies())
-                .filter(cookie -> cookie.getName().equals("refreshToken"))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElseThrow(()-> new RuntimeException("NO REFRESH TOKEN FOUND"));
+    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest, @RequestBody(required = false) String rToken){
+        String refreshToken=null;
+//        refreshToken= Arrays.stream(httpServletRequest.getCookies())
+//                .filter(cookie -> cookie.getName().equals("refreshToken"))
+//                .findFirst()
+//                .map(Cookie::getValue)
+//                .orElse(null);
+        Cookie[] cookies = httpServletRequest.getCookies();
+
+        if (cookies != null) {
+            refreshToken = Arrays.stream(cookies)
+                    .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                    .map(Cookie::getValue)
+                    .findFirst()
+                    .orElse(null);
+        }
 //        System.out.println("rToken is: ..."+refreshToken);
+        if (refreshToken == null){
+            if (rToken != null) {
+                refreshToken=rToken;
+            } else {
+                throw new RuntimeException("NO REFRESH TOKEN FOUND");
+            }
+        }
         RefreshToken tokenExist = refreshTokenService.isTokenExist(refreshToken).orElse(null);
         if (tokenExist == null){
             ResponseCookie deleteCookie = ResponseCookie.from("refreshToken", "")
@@ -91,8 +108,8 @@ public class UserController {
     }
 
     @PostMapping("/auth/logout")
-    public void logoutUser(HttpServletRequest httpServletRequest){
-        userService.logoutUser(httpServletRequest);
+    public void logoutUser(HttpServletRequest httpServletRequest, @RequestBody(required = false) String rToken){
+        userService.logoutUser(httpServletRequest, rToken);
     }
 
     @PreAuthorize("hasRole('ADMIN')")

@@ -79,12 +79,22 @@ public class UserService {
         }
     }
 
-    public void logoutUser(HttpServletRequest httpServletRequest) {
+    public void logoutUser(HttpServletRequest httpServletRequest, String rToken) {
 //        System.out.println("logged out...");
-        Arrays.stream(httpServletRequest.getCookies())
-                .filter(cookie -> cookie.getName().equals("refreshToken"))
-                .findFirst()
-                .map(Cookie::getValue).ifPresent(refreshToken -> refreshTokenRepository.deleteByToken(refreshToken));
+        String refreshToken = null;
+        Cookie[] cookies = httpServletRequest.getCookies();
+        if (cookies != null){
+          refreshToken =  Arrays.stream(cookies)
+                    .filter(cookie -> cookie.getName().equals("refreshToken"))
+                    .findFirst()
+                    .map(Cookie::getValue).orElse(null);
+        }
+        if (refreshToken == null && rToken != null && !rToken.isBlank()) {
+            refreshToken = rToken;
+        }
 
+        if (refreshToken != null) {
+            refreshTokenRepository.deleteByToken(refreshToken);
+        }
     }
 }
