@@ -1,5 +1,6 @@
 package com.shoply.Products.Controller;
 
+import com.shoply.Products.Model.RTokenDto;
 import com.shoply.Products.Model.RefreshToken;
 import com.shoply.Products.Model.Users;
 import com.shoply.Products.Response.JWTResponse;
@@ -65,7 +66,7 @@ public class UserController {
     }
 
     @PostMapping("/refreshToken")
-    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest, @RequestBody(required = false) String rToken){
+    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest, @RequestBody(required = false) RTokenDto rToken){
         String refreshToken=null;
 //        refreshToken= Arrays.stream(httpServletRequest.getCookies())
 //                .filter(cookie -> cookie.getName().equals("refreshToken"))
@@ -83,8 +84,8 @@ public class UserController {
         }
 //        System.out.println("rToken is: ..."+refreshToken);
         if (refreshToken == null){
-            if (rToken != null) {
-                refreshToken=rToken;
+            if (rToken.getrToken() != null) {
+                refreshToken=rToken.getrToken();
             } else {
                 throw new RuntimeException("NO REFRESH TOKEN FOUND");
             }
@@ -108,8 +109,8 @@ public class UserController {
     }
 
     @PostMapping("/auth/logout")
-    public void logoutUser(HttpServletRequest httpServletRequest, @RequestBody(required = false) String rToken){
-        userService.logoutUser(httpServletRequest, rToken);
+    public void logoutUser(HttpServletRequest httpServletRequest, @RequestBody(required = false) RTokenDto rToken){
+        userService.logoutUser(httpServletRequest, rToken.getrToken());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
