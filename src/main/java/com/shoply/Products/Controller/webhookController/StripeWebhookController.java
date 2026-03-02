@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,7 @@ public class StripeWebhookController {
 
     @PostMapping("/webhook/stripe")
     public ResponseEntity<String> handleWebhookEvent(HttpServletRequest request, @RequestBody String payload,
-                                                     @RequestHeader("Stripe-Signature") String header){
+                                                     @RequestHeader("Stripe-Signature") String header) throws IOException {
         Event event;
         try {
             event= Webhook.constructEvent(payload, header, webhookSecret);
@@ -97,7 +98,7 @@ public class StripeWebhookController {
             checkOutRepository.save(checkoutSession);
 
 //            send order confirmation mail
-            emailService.orderConfirmation(userId.getEmail(), checkoutSession.getSub_total(), checkoutSession.getItems(), checkoutSession.getId());
+            emailService.orderConfirmation2(userId.getEmail(), checkoutSession.getSub_total(), checkoutSession.getItems(), checkoutSession.getId());
 
             clearCart(checkoutSession);
 
