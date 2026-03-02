@@ -96,10 +96,8 @@ public class StripeWebhookController {
 
             checkoutSession.setStatus(CHECKOUT_STATUS.SUCCESS);
             checkOutRepository.save(checkoutSession);
-
 //            send order confirmation mail
-            emailService.orderConfirmation2(userId.getEmail(), checkoutSession.getSub_total(), checkoutSession.getItems(), checkoutSession.getId());
-
+            emailService.orderConfirmation(userId.getEmail(), checkoutSession.getSub_total(), checkoutSession.getItems(), checkoutSession.getId());
             clearCart(checkoutSession);
 
         }

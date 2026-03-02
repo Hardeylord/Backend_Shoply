@@ -44,6 +44,7 @@ public class SecurityConfig {
                                 "/products/**",
                                 "/login",
                                 "/",
+                                "/send",
                                 "/search/**",
                                 "/product/**",
                                 "/accountUpgrade",
