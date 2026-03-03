@@ -428,7 +428,7 @@ public class EmailService {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper orderMail = new MimeMessageHelper(message, true);
 
-            orderMail.setTo("adedipupoadeagbo@gmail.com");
+            orderMail.setTo("olanrewajuadeagbo3@gmail.com");
             orderMail.setFrom("adedipupoadeagbo@gmail.com");
             orderMail.setSubject("Shoply %s Order Confirmed");
             orderMail.setText("orderSummary testing");
